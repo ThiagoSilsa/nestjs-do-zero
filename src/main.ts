@@ -4,7 +4,9 @@ import { ResponseTransformInterceptor } from './app.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'debug', 'verbose'],
+  });
   app.useGlobalInterceptors(new ResponseTransformInterceptor());
   app.useGlobalPipes(
     new ValidationPipe({

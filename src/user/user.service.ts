@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 
 const users: { id: number; name: string }[] = [
@@ -8,11 +8,14 @@ const users: { id: number; name: string }[] = [
 
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
   getUsers(): { id: number; name: string }[] {
+    this.logger.verbose('Fetching all users');
     return users;
   }
 
   getUserById(id: number): { id: number; name: string } | string {
+    this.logger.debug(`Fetching user with ID: ${id}`);
     const user = users.find((user) => user.id === id);
     if (user) {
       return user;
