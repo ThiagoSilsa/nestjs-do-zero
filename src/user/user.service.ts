@@ -11,8 +11,8 @@ export class UserService {
     return users;
   }
 
-  getUserById(id: string): { id: number; name: string } | string {
-    const user = users.find((user) => user.id === parseInt(id));
+  getUserById(id: number): { id: number; name: string } | string {
+    const user = users.find((user) => user.id === id);
     if (user) {
       return user;
     }
@@ -29,9 +29,9 @@ export class UserService {
     return 'User created successfully';
   }
 
-  updateUser(body: { name: string }, id: string): string {
+  updateUser(body: { name: string }, id: number): string {
     const users = this.getUsers();
-    const userIndex = users.findIndex((user) => user.id === parseInt(id));
+    const userIndex = users.findIndex((user) => user.id === id);
     if (userIndex === -1) {
       return 'User not found';
     }

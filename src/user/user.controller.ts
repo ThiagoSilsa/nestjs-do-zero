@@ -3,12 +3,14 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AppGuard } from '~/app.guard';
+import { UpperCasePipe } from '~/uppercase.pipe';
 
 @UseGuards(AppGuard)
 @Controller('user')
@@ -22,32 +24,26 @@ export class UserController {
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string): { id: number; name: string } | string {
+  getUserById(
+    @Param('id', ParseIntPipe) id: number,
+  ): { id: number; name: string } | string {
     return this.appService.getUserById(id);
   }
 
   @Post()
-  createUser(@Body() body: { id: number; name: string }): string {
-    if (!body.id || !body.name) {
-      return 'Invalid user data';
-    }
-    const parsedBody = {
-      id: Number(body.id),
-      name: body.name,
-    };
-    if (
-      typeof parsedBody.id !== 'number' ||
-      typeof parsedBody.name !== 'string'
-    ) {
-      return 'Invalid user data types';
-    }
-
-    const result = this.appService.createUser(parsedBody);
+  createUser(
+    @Body('id', ParseIntPipe) id: number,
+    @Body('name', UpperCasePipe) name: string,
+  ): string {
+    const result = this.appService.createUser({ id, name });
     return result;
   }
 
   @Patch(':id')
-  updateUser(@Param('id') id: string, @Body() body: { name: string }): string {
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: { name: string },
+  ): string {
     // Verify if user exists
     const existingUser = this.appService.getUserById(id);
     // Verify id and body
