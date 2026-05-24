@@ -11,6 +11,7 @@ import {
 import { UserService } from './user.service';
 import { AppGuard } from '~/app.guard';
 import { UpperCasePipe } from '~/uppercase.pipe';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @UseGuards(AppGuard)
 @Controller('user')
@@ -31,11 +32,8 @@ export class UserController {
   }
 
   @Post()
-  createUser(
-    @Body('id', ParseIntPipe) id: number,
-    @Body('name', UpperCasePipe) name: string,
-  ): string {
-    const result = this.appService.createUser({ id, name });
+  createUser(@Body() body: CreateUserDto): string {
+    const result = this.appService.createUser(body);
     return result;
   }
 
